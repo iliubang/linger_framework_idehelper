@@ -610,6 +610,13 @@ class Router
     }
 
     /**
+     * @return array
+     */
+    public function getRules()
+    {
+    }
+
+    /**
      * @return void
      */
     public function dump()
@@ -680,6 +687,13 @@ final class RouterRule
      * @return string
      */
     public function getClassMethod()
+    {
+    }
+
+    /**
+     * @return void
+     */
+    public function dump()
     {
     }
 }
