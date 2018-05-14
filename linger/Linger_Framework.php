@@ -527,6 +527,14 @@ class Response
     public function json($obj = null)
     {
     }
+
+    /**
+     * @param string $url
+     */
+    public function redirect(string $url)
+    {
+
+    }
 }
 
 class Router
