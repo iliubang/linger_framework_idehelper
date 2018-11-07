@@ -39,9 +39,12 @@ foreach ($carr as $name) {
 
         $inters = $clazz->getInterfaces();
         if (!empty($inters)) {
-            $str =  " implements ";
+            $str = " implements ";
             foreach ($inters as $inter) {
-                $str .= '\\' . $inter->getName() . ",";
+                if ($inter->getName() == "Traversable") {
+                    continue;
+                }
+                $str .= '\\' . $inter->getNamespaceName() . $inter->getName() . ",";
             }
             echo rtrim($str, ',');
         }
@@ -72,16 +75,39 @@ foreach ($carr as $name) {
                 echo $modi;
             }
             echo ' function ' . $method->getName();
+            $params = $method->getParameters();
+            $paramsStr = '';
+            foreach ($params as $paramObj) {
+                if ($paramObj->isCallable()) {
+                    $paramsStr .= 'callable ';
+                } elseif ($paramObj->isArray()) {
+                    $paramsStr .= 'array ';
+                }
+
+                if (!$paramObj->canBePassedByValue()) {
+                    $paramsStr .= '&';
+                }
+
+                $paramsStr .= '$' . $paramObj->getName();
+                try {
+                    $default = $paramObj->getDefaultValue();
+                    $paramsStr .= ' = ' . $default;
+                } catch (ReflectionException $e) {
+                    ;;
+                }
+                $paramsStr .= ', ';
+            }
+
+            $paramsStr = rtrim($paramsStr, ', ');
             if ($clazz->isInterface()) {
-                echo '();' . PHP_EOL;
+                echo '(' . $paramsStr . ');' . PHP_EOL;
             } else {
-                echo '() { }' . PHP_EOL;
+                echo '(' . $paramsStr . ') { }' . PHP_EOL;
             }
         }
 
         echo "}\n";
     } catch (ReflectionException $e) {
-        //        echo $e->getMessage();
+//        echo $e->getMessage();
     }
 }
-
