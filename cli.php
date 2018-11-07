@@ -17,6 +17,35 @@ $carr = [
     'View'
 ];
 
+$types = [
+    '_app'            => 'Application',
+    '_config'         => 'Config',
+    '_router'         => 'Router',
+    '_dispatcher'     => 'Dispatcher',
+    '_instance'       => 'self',
+    '_request'        => 'Request',
+    '_response'       => 'Response',
+    '_rule'           => 'RouterRule',
+    '_view'           => 'View',
+    '_method'         => 'string',
+    '_uri'            => 'string',
+    '_header'         => 'array',
+    '_query'          => 'array',
+    '_param'          => 'array',
+    '_post'           => 'array',
+    '_files'          => 'array',
+    '_cookie'         => 'array',
+    '_status'         => 'int',
+    '_body'           => 'string',
+    '_rules'          => 'RouterRule[]',
+    '_request_method' => 'string',
+    '_params_map'     => 'array',
+    '_class'          => 'string',
+    '_class_method'   => 'string',
+    '_vars'           => 'array',
+    '_tpl_dir'        => 'string'
+];
+
 echo <<<PHP
 namespace linger\\framework;
 
@@ -27,7 +56,9 @@ foreach ($carr as $name) {
         $c = "linger\\framework\\" . $name;
         $clazz = new ReflectionClass($c);
         $m = implode(" ", Reflection::getModifierNames($clazz->getModifiers()));
-        if (!empty($m)) echo $m . " ";
+        if (!empty($m)) {
+            echo $m . " ";
+        }
         if ($clazz->isTrait()) {
             echo "trait ";
         } elseif ($clazz->isInterface()) {
@@ -56,6 +87,12 @@ foreach ($carr as $name) {
             echo "\tconst " . $constant . " = " . $value . ";\n";
         }
         foreach ($clazz->getProperties() as $property) {
+            $name = $property->getName();
+            if (isset($types[$name])) {
+                echo "\t/**\n";
+                echo "\t * @var {$types[$name]}\n";
+                echo "\t */\n";
+            }
             echo "\t" . implode(" ",
                     Reflection::getModifierNames($property->getModifiers())) . " $" . $property->getName();
             $property->setAccessible(true);

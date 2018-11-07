@@ -2,9 +2,21 @@
 namespace linger\framework;
 final class Application
 {
+	/**
+	 * @var Application
+	 */
 	protected static $_app;
+	/**
+	 * @var Config
+	 */
 	protected $_config;
+	/**
+	 * @var Router
+	 */
 	protected $_router;
+	/**
+	 * @var Dispatcher
+	 */
 	protected $_dispatcher;
 	public static function autoload() { }
 	public function __construct(array $aconfig) { }
@@ -21,7 +33,13 @@ interface Bootstrap
 }
 final class Config implements \Iterator,\ArrayAccess,\Countable
 {
+	/**
+	 * @var self
+	 */
 	protected static $_instance;
+	/**
+	 * @var Config
+	 */
 	protected $_config;
 	public function __construct($config) { }
 	private function __clone() { }
@@ -50,8 +68,17 @@ final class Config implements \Iterator,\ArrayAccess,\Countable
 }
 abstract class Controller
 {
+	/**
+	 * @var Request
+	 */
 	protected $_request;
+	/**
+	 * @var Response
+	 */
 	protected $_response;
+	/**
+	 * @var View
+	 */
 	protected $_view;
 	private function __construct() { }
 	protected function _init() { }
@@ -61,8 +88,17 @@ abstract class Controller
 }
 class Dispatcher
 {
+	/**
+	 * @var self
+	 */
 	protected static $_instance;
+	/**
+	 * @var Router
+	 */
 	private $_router;
+	/**
+	 * @var Request
+	 */
 	private $_request;
 	private function __construct() { }
 	public function findRouter() { }
@@ -70,13 +106,37 @@ class Dispatcher
 }
 class Request
 {
+	/**
+	 * @var self
+	 */
 	protected static $_instance;
+	/**
+	 * @var string
+	 */
 	protected $_method;
+	/**
+	 * @var string
+	 */
 	protected $_uri;
+	/**
+	 * @var array
+	 */
 	protected $_cookie;
+	/**
+	 * @var array
+	 */
 	protected $_query;
+	/**
+	 * @var array
+	 */
 	protected $_param;
+	/**
+	 * @var array
+	 */
 	protected $_post;
+	/**
+	 * @var array
+	 */
 	protected $_files;
 	public function __construct() { }
 	public function getMethod() { }
@@ -98,9 +158,21 @@ class Request
 }
 class Response
 {
+	/**
+	 * @var self
+	 */
 	protected static $_instance;
+	/**
+	 * @var array
+	 */
 	protected $_header;
+	/**
+	 * @var int
+	 */
 	protected $_status;
+	/**
+	 * @var string
+	 */
 	protected $_body;
 	private function __construct() { }
 	public function status($status) { }
@@ -112,7 +184,13 @@ class Response
 }
 class Router
 {
+	/**
+	 * @var self
+	 */
 	private static $_instance;
+	/**
+	 * @var RouterRule[]
+	 */
 	private $_rules;
 	private $_chunk_size;
 	public function __construct() { }
@@ -127,10 +205,25 @@ class Router
 }
 final class RouterRule
 {
+	/**
+	 * @var string
+	 */
 	private $_request_method;
+	/**
+	 * @var string
+	 */
 	private $_uri;
+	/**
+	 * @var array
+	 */
 	private $_params_map;
+	/**
+	 * @var string
+	 */
 	private $_class;
+	/**
+	 * @var string
+	 */
 	private $_class_method;
 	public function __construct($request_method, $uri, $class, $class_method) { }
 	public function getRequestMethod() { }
@@ -141,7 +234,13 @@ final class RouterRule
 }
 class View
 {
+	/**
+	 * @var array
+	 */
 	protected $_vars;
+	/**
+	 * @var string
+	 */
 	protected $_tpl_dir;
 	public function __construct() { }
 	public function setScriptPath($tpl) { }
