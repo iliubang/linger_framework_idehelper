@@ -2,6 +2,15 @@
 
 error_reporting(0);
 
+function from_camel_case($str)
+{
+    $str[0] = strtolower($str[0]);
+    $func = function ($c) {
+        return "_" . strtolower($c[1]);
+    };
+    return preg_replace_callback('/([A-Z])/', $func, $str);
+}
+
 echo "<?php\n";
 
 $carr = [
@@ -14,36 +23,50 @@ $carr = [
     'Response',
     'Router',
     'RouterRule',
-    'View'
+    'View',
 ];
 
 $types = [
-    '_app'            => 'Application',
-    '_config'         => 'Config',
-    '_router'         => 'Router',
-    '_dispatcher'     => 'Dispatcher',
-    '_instance'       => 'self',
-    '_request'        => 'Request',
-    '_response'       => 'Response',
-    '_rule'           => 'RouterRule',
-    '_view'           => 'View',
-    '_method'         => 'string',
-    '_uri'            => 'string',
-    '_header'         => 'array',
-    '_query'          => 'array',
-    '_param'          => 'array',
-    '_post'           => 'array',
-    '_files'          => 'array',
-    '_cookie'         => 'array',
-    '_status'         => 'int',
-    '_body'           => 'string',
-    '_rules'          => 'RouterRule[]',
-    '_request_method' => 'string',
-    '_params_map'     => 'array',
-    '_class'          => 'string',
-    '_class_method'   => 'string',
-    '_vars'           => 'array',
-    '_tpl_dir'        => 'string'
+    'app'            => 'Application',
+    'config'         => 'Config',
+    'router'         => 'Router',
+    'dispatcher'     => 'Dispatcher',
+    'instance'       => 'self',
+    'request'        => 'Request',
+    'response'       => 'Response',
+    'rule'           => 'RouterRule',
+    'view'           => 'View',
+    'bootclasses'    => 'Bootstrap',
+    'method'         => 'string',
+    'uri'            => 'string',
+    'header'         => 'array',
+    'query'          => 'array',
+    'param'          => 'array',
+    'post'           => 'array',
+    'files'          => 'array',
+    'cookie'         => 'array',
+    'status'         => 'int',
+    'body'           => 'string',
+    'rules'          => 'RouterRule[]',
+    'request_method' => 'string',
+    'params_map'     => 'array',
+    'class'          => 'string',
+    'class_method'   => 'string',
+    'vars'           => 'array',
+    'tpl_dir'        => 'string',
+    'key'            => 'string',
+    'val'            => 'string',
+    'filter'         => 'callable',
+    'default_value'  => 'mixed',
+    'script_path'    => 'string',
+];
+
+$methods = [
+    'status' => '\$this',
+    'header' => '\$this',
+    'body'   => '\$this',
+    'json'   => '\$this',
+    'assign' => '\$this',
 ];
 
 echo <<<PHP
@@ -88,6 +111,9 @@ foreach ($carr as $name) {
         }
         foreach ($clazz->getProperties() as $property) {
             $name = $property->getName();
+            if (substr($name, 0, 1) == '_') {
+                $name = substr($name, 1);
+            }
             if (isset($types[$name])) {
                 echo "\t/**\n";
                 echo "\t * @var {$types[$name]}\n";
@@ -104,6 +130,40 @@ foreach ($carr as $name) {
         }
         //ReflectionClass::export($c);
         foreach ($clazz->getMethods() as $method) {
+            $params = $method->getParameters();
+            echo "\t/**\n";
+
+            foreach ($params as $param) {
+                $n = from_camel_case($param->getName());
+                if (isset($types[$n])) {
+                    echo "\t * @param {$types[$n]} \${$param->getName()}\n";
+                }
+            }
+
+            $name = $method->getName();
+            if (substr($name, 0, 3) == 'get') {
+                $name = substr($name, 3);
+                $name = from_camel_case($name);
+                if (isset($types[$name])) {
+                    echo "\t * @return {$types[$name]}\n";
+                }
+            } elseif (substr($name, 0, 4) == 'find') {
+                $name = substr($name, 4);
+                $name = from_camel_case($name);
+                if (isset($types[$name])) {
+                    echo "\t * @return {$types[$name]}\n";
+                }
+            } elseif (substr($name, 0, 3) == 'set' && strlen($name) > 3) {
+                echo "\t * @return \$this\n";
+            } elseif (substr($name, 0, 2) == 'is') {
+                echo "\t * @return boolean\n";
+            } elseif (isset($methods[$name])) {
+                echo "\t * @return \$this\n";
+            } else {
+                echo "\t * @return void\n";
+            }
+
+            echo "\t */\n";
             $modi = implode(" ", Reflection::getModifierNames($method->getModifiers()));
             echo "\t";
             if ($clazz->isInterface()) {
@@ -111,8 +171,8 @@ foreach ($carr as $name) {
             } else {
                 echo $modi;
             }
+
             echo ' function ' . $method->getName();
-            $params = $method->getParameters();
             $paramsStr = '';
             foreach ($params as $paramObj) {
                 if ($paramObj->isCallable()) {
@@ -145,6 +205,6 @@ foreach ($carr as $name) {
 
         echo "}\n";
     } catch (ReflectionException $e) {
-//        echo $e->getMessage();
+        //        echo $e->getMessage();
     }
 }
