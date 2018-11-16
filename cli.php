@@ -13,7 +13,7 @@ function from_camel_case($str)
 
 echo "<?php\n";
 
-$carr = [
+$classes = [
     'Application',
     'Bootstrap',
     'Config',
@@ -44,6 +44,7 @@ $types = [
     'param'          => 'array',
     'post'           => 'array',
     'files'          => 'array',
+    'file'           => 'array',
     'cookie'         => 'array',
     'status'         => 'int',
     'body'           => 'string',
@@ -55,11 +56,23 @@ $types = [
     'vars'           => 'array',
     'tpl_dir'        => 'string',
     'key'            => 'string',
-    'val'            => 'string',
+    'val'            => 'mixed',
     'filter'         => 'callable',
     'default_value'  => 'mixed',
     'script_path'    => 'string',
+    'obj'            => 'array',
+    'url'            => 'string'
 ];
+
+$protocolSupportedType = [
+    'string',
+    'int',
+    'bool',
+    'callable',
+    'array'
+];
+
+$protocolSupportedType = array_merge($protocolSupportedType, $classes);
 
 $methods = [
     'status' => '\$this',
@@ -67,6 +80,11 @@ $methods = [
     'body'   => '\$this',
     'json'   => '\$this',
     'assign' => '\$this',
+    'app'    => 'Application',
+    'get'    => '\$this',
+    'put'    => '\$this',
+    'delete' => '\$this',
+    'post'   => '\$this',
 ];
 
 echo <<<PHP
@@ -74,7 +92,7 @@ namespace linger\\framework;
 
 PHP;
 
-foreach ($carr as $name) {
+foreach ($classes as $name) {
     try {
         $c = "linger\\framework\\" . $name;
         $clazz = new ReflectionClass($c);
@@ -141,13 +159,13 @@ foreach ($carr as $name) {
             }
 
             $name = $method->getName();
-            if (substr($name, 0, 3) == 'get') {
+            if (substr($name, 0, 3) == 'get' && strlen($name) > 3) {
                 $name = substr($name, 3);
                 $name = from_camel_case($name);
                 if (isset($types[$name])) {
                     echo "\t * @return {$types[$name]}\n";
                 }
-            } elseif (substr($name, 0, 4) == 'find') {
+            } elseif (substr($name, 0, 4) == 'find' && strlen($name) > 4) {
                 $name = substr($name, 4);
                 $name = from_camel_case($name);
                 if (isset($types[$name])) {
@@ -155,8 +173,8 @@ foreach ($carr as $name) {
                 }
             } elseif (substr($name, 0, 3) == 'set' && strlen($name) > 3) {
                 echo "\t * @return \$this\n";
-            } elseif (substr($name, 0, 2) == 'is') {
-                echo "\t * @return boolean\n";
+            } elseif (substr($name, 0, 2) == 'is' && strlen($name) > 2) {
+                echo "\t * @return bool\n";
             } elseif (isset($methods[$name])) {
                 echo "\t * @return \$this\n";
             } else {
@@ -179,6 +197,11 @@ foreach ($carr as $name) {
                     $paramsStr .= 'callable ';
                 } elseif ($paramObj->isArray()) {
                     $paramsStr .= 'array ';
+                } else {
+                    $n = from_camel_case($paramObj->getName());
+                    if (isset($types[$n]) && in_array($types[$n], $protocolSupportedType)) {
+                        $paramsStr .= $types[$n] . ' ';
+                    }
                 }
 
                 if (!$paramObj->canBePassedByValue()) {

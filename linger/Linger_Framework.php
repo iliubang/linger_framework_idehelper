@@ -27,14 +27,14 @@ final class Application
 	 */
 	public function __construct(array $aconfig) { }
 	/**
-	 * @return void
+	 * @return $this
 	 */
 	public static function app() { }
 	/**
 	 * @param Bootstrap $bootclasses
 	 * @return void
 	 */
-	public function init($bootclasses) { }
+	public function init(Bootstrap $bootclasses) { }
 	/**
 	 * @return void
 	 */
@@ -58,7 +58,7 @@ interface Bootstrap
 	 * @param Application $app
 	 * @return void
 	 */
-	public function bootstrap($app);
+	public function bootstrap(Application $app);
 }
 final class Config implements \Iterator,\ArrayAccess,\Countable
 {
@@ -74,7 +74,7 @@ final class Config implements \Iterator,\ArrayAccess,\Countable
 	 * @param Config $config
 	 * @return void
 	 */
-	public function __construct($config) { }
+	public function __construct(Config $config) { }
 	/**
 	 * @return void
 	 */
@@ -89,24 +89,25 @@ final class Config implements \Iterator,\ArrayAccess,\Countable
 	private function __wakeup() { }
 	/**
 	 * @param string $key
+	 * @return $this
 	 */
-	public function get($key) { }
+	public function get(string $key) { }
 	/**
 	 * @param string $key
-	 * @param string $val
+	 * @param mixed $val
 	 * @return void
 	 */
-	public function set($key, $val) { }
-	/**
-	 * @param string $key
-	 * @return void
-	 */
-	public function has($key) { }
+	public function set(string $key, $val) { }
 	/**
 	 * @param string $key
 	 * @return void
 	 */
-	public function del($key) { }
+	public function has(string $key) { }
+	/**
+	 * @param string $key
+	 * @return void
+	 */
+	public function del(string $key) { }
 	/**
 	 * @return void
 	 */
@@ -139,44 +140,44 @@ final class Config implements \Iterator,\ArrayAccess,\Countable
 	 * @param string $key
 	 * @return void
 	 */
-	public function offsetGet($key) { }
+	public function offsetGet(string $key) { }
 	/**
 	 * @param string $key
-	 * @param string $val
+	 * @param mixed $val
 	 * @return void
 	 */
-	public function offsetSet($key, $val) { }
-	/**
-	 * @param string $key
-	 * @return void
-	 */
-	public function offsetExists($key) { }
+	public function offsetSet(string $key, $val) { }
 	/**
 	 * @param string $key
 	 * @return void
 	 */
-	public function offsetUnset($key) { }
+	public function offsetExists(string $key) { }
 	/**
 	 * @param string $key
 	 * @return void
 	 */
-	public function __get($key) { }
-	/**
-	 * @param string $key
-	 * @param string $val
-	 * @return void
-	 */
-	public function __set($key, $val) { }
+	public function offsetUnset(string $key) { }
 	/**
 	 * @param string $key
 	 * @return void
 	 */
-	public function __isset($key) { }
+	public function __get(string $key) { }
+	/**
+	 * @param string $key
+	 * @param mixed $val
+	 * @return void
+	 */
+	public function __set(string $key, $val) { }
 	/**
 	 * @param string $key
 	 * @return void
 	 */
-	public function __unset($key) { }
+	public function __isset(string $key) { }
+	/**
+	 * @param string $key
+	 * @return void
+	 */
+	public function __unset(string $key) { }
 	/**
 	 * @return void
 	 */
@@ -296,71 +297,72 @@ class Request
 	 * @param callable $filter
 	 * @return array
 	 */
-	public function getQuery($key, $default_value, callable $filter) { }
+	public function getQuery(string $key, $default_value, callable $filter) { }
 	/**
 	 * @param string $key
 	 * @param mixed $default_value
 	 * @param callable $filter
 	 * @return array
 	 */
-	public function getPost($key, $default_value, callable $filter) { }
+	public function getPost(string $key, $default_value, callable $filter) { }
 	/**
 	 * @param string $key
 	 * @param mixed $default_value
 	 * @param callable $filter
 	 * @return array
 	 */
-	public function getParam($key, $default_value, callable $filter) { }
-	/**
-	 * @param string $key
-	 */
-	public function getFile($key) { }
+	public function getParam(string $key, $default_value, callable $filter) { }
 	/**
 	 * @param string $key
 	 * @return array
 	 */
-	public function getCookie($key) { }
+	public function getFile(string $key) { }
 	/**
-	 * @return boolean
+	 * @param string $key
+	 * @return array
+	 */
+	public function getCookie(string $key) { }
+	/**
+	 * @return bool
 	 */
 	public function isAjax() { }
 	/**
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isPost() { }
 	/**
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isGet() { }
 	/**
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isCli() { }
 	/**
 	 * @param string $method
 	 * @return $this
 	 */
-	public function setMethod($method) { }
+	public function setMethod(string $method) { }
 	/**
 	 * @param string $uri
 	 * @return $this
 	 */
-	public function setUri($uri) { }
+	public function setUri(string $uri) { }
 	/**
 	 * @param array $param
 	 * @return $this
 	 */
-	public function setParam($param) { }
+	public function setParam(array $param) { }
 	/**
 	 * @param array $post
 	 * @return $this
 	 */
-	public function setPost($post) { }
+	public function setPost(array $post) { }
 	/**
 	 * @param array $query
 	 * @return $this
 	 */
-	public function setQuery($query) { }
+	public function setQuery(array $query) { }
 }
 class Response
 {
@@ -388,30 +390,32 @@ class Response
 	 * @param int $status
 	 * @return $this
 	 */
-	public function status($status) { }
+	public function status(int $status) { }
 	/**
 	 * @param string $key
-	 * @param string $val
+	 * @param mixed $val
 	 * @return $this
 	 */
-	public function header($key, $val) { }
+	public function header(string $key, $val) { }
 	/**
 	 * @param string $body
 	 * @return $this
 	 */
-	public function body($body) { }
+	public function body(string $body) { }
 	/**
 	 * @return void
 	 */
 	public function send() { }
 	/**
+	 * @param array $obj
 	 * @return $this
 	 */
-	public function json($obj) { }
+	public function json(array $obj) { }
 	/**
+	 * @param string $url
 	 * @return void
 	 */
-	public function redirect($url) { }
+	public function redirect(string $url) { }
 }
 class Router
 {
@@ -436,29 +440,30 @@ class Router
 	 * @param string $uri
 	 * @param string $class
 	 * @param string $method
+	 * @return $this
 	 */
-	public function get($uri, $class, $method) { }
+	public function get(string $uri, string $class, string $method) { }
 	/**
 	 * @param string $uri
 	 * @param string $class
 	 * @param string $method
-	 * @return void
+	 * @return $this
 	 */
-	public function put($uri, $class, $method) { }
+	public function put(string $uri, string $class, string $method) { }
 	/**
 	 * @param string $uri
 	 * @param string $class
 	 * @param string $method
-	 * @return void
+	 * @return $this
 	 */
-	public function post($uri, $class, $method) { }
+	public function post(string $uri, string $class, string $method) { }
 	/**
 	 * @param string $uri
 	 * @param string $class
 	 * @param string $method
-	 * @return void
+	 * @return $this
 	 */
-	public function delete($uri, $class, $method) { }
+	public function delete(string $uri, string $class, string $method) { }
 	/**
 	 * @return $this
 	 */
@@ -501,7 +506,7 @@ final class RouterRule
 	 * @param string $class_method
 	 * @return void
 	 */
-	public function __construct($request_method, $uri, $class, $class_method) { }
+	public function __construct(string $request_method, string $uri, string $class, string $class_method) { }
 	/**
 	 * @return string
 	 */
@@ -559,8 +564,8 @@ class View
 	public function getVars() { }
 	/**
 	 * @param string $key
-	 * @param string $val
+	 * @param mixed $val
 	 * @return $this
 	 */
-	public function assign($key, $val) { }
+	public function assign(string $key, $val) { }
 }
