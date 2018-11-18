@@ -36,7 +36,7 @@ $types = [
     'response'       => 'Response',
     'rule'           => 'RouterRule',
     'view'           => 'View',
-    'bootclasses'    => 'Bootstrap',
+    'bootclasses'    => 'Bootstrap[]',
     'method'         => 'string',
     'uri'            => 'string',
     'header'         => 'array',
@@ -85,6 +85,7 @@ $methods = [
     'put'    => '\$this',
     'delete' => '\$this',
     'post'   => '\$this',
+    'init'   => 'Application'
 ];
 
 echo <<<PHP

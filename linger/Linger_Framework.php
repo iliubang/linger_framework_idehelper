@@ -31,10 +31,10 @@ final class Application
 	 */
 	public static function app() { }
 	/**
-	 * @param Bootstrap $bootclasses
-	 * @return void
+	 * @param Bootstrap[] $bootclasses
+	 * @return $this
 	 */
-	public function init(Bootstrap $bootclasses) { }
+	public function init($bootclasses) { }
 	/**
 	 * @return void
 	 */
